@@ -1,0 +1,61 @@
+resources:
+  jobs:
+    customer_etl_job:
+
+      name: customer_etl_job
+
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: abfss://source@stworkplaceanalyticsdev.dfs.core.windows.net/customers/
+
+      email_notifications:
+        on_failure:
+          - engineerdata11@yahoo.com
+
+      tasks:
+
+        - task_key: bronze
+
+          max_retries: 1
+          min_retry_interval_millis: 30
+          retry_on_timeout: false
+
+          notebook_task:
+            notebook_path: ../src/bronze/bronze.ipynb
+
+            base_parameters:
+              catalog: ${var.catalog}
+              storage_account: ${var.storage_account}
+
+
+        - task_key: silver
+
+          depends_on:
+            - task_key: bronze
+
+          max_retries: 1
+          min_retry_interval_millis: 30
+          retry_on_timeout: false
+
+          notebook_task:
+            notebook_path: ../src/silver/silver.ipynb
+
+            base_parameters:
+              catalog: ${var.catalog}
+
+
+        - task_key: gold
+
+          depends_on:
+            - task_key: silver
+
+          max_retries: 1
+          min_retry_interval_millis: 30
+          retry_on_timeout: false
+
+          notebook_task:
+            notebook_path: ../src/gold/gold.ipynb
+
+            base_parameters:
+              catalog: ${var.catalog}

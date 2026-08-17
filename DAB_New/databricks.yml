@@ -1,0 +1,55 @@
+bundle:
+  name: DAB_New
+  uuid: b9b4e43a-0cf9-4010-a592-e0c29100bcba
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+variables:
+
+  catalog:
+    description: Unity Catalog catalog for the target environment
+    default: dev_catalog
+
+  storage_account:
+    description: ADLS storage account for the target environment
+    default: stworkplaceanalyticsdev
+
+
+targets:
+
+  dev:
+    mode: development
+    default: true
+
+    variables:
+      catalog: dev_catalog
+      storage_account: stworkplaceanalyticsdev
+
+    workspace:
+      host: https://adb-7405608147432343.3.azuredatabricks.net/
+      root_path: ~/.bundle/${bundle.name}/${bundle.target}
+
+    permissions:
+      - user_name: engineerdata11@yahoo.com
+        level: CAN_MANAGE
+
+    presets:
+      source_linked_deployment: false
+
+
+  production:
+    mode: production
+
+    variables:
+      catalog: prod_catalog
+      storage_account: <PRODUCTION-STORAGE-ACCOUNT>
+
+    workspace:
+      host: https://adb-7405608147432343.3.azuredatabricks.net/
+      root_path: /Workspace/Production/.bundle/${bundle.name}/${bundle.target}
+
+    permissions:
+      - user_name: engineerdata11@yahoo.com
+        level: CAN_MANAGE
