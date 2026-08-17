@@ -13,6 +13,10 @@ jobs:
   validate-and-test:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: DAB_New
+
     env:
       DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
