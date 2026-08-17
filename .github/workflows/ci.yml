@@ -37,7 +37,7 @@ jobs:
         run: uv sync --dev --no-install-project
 
       - name: Run tests
-        run: uv run pytest
+        run: uv run --no-project pytest
 
       - name: Install Databricks CLI
         uses: databricks/setup-cli@main
